@@ -676,12 +676,6 @@ func resourceVmQemu() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"preprovision": {
-				Type:          schema.TypeBool,
-				Optional:      true,
-				Default:       true,
-				ConflictsWith: []string{"ssh_forward_ip", "ssh_user", "ssh_private_key", "os_type", "os_network_config"},
-			},
 			"pool": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -1101,7 +1095,6 @@ func resourceVmQemuUpdate(d *schema.ResourceData, meta interface{}) error {
 		"numa",
 		"hotplug",
 		"scsihw",
-		"preprovision",
 		"os_type",
 		"ciuser",
 		"cipassword",
@@ -1296,7 +1289,7 @@ func _resourceVmQemuRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("ipconfig5", config.Ipconfig5)
 
 	// Some dirty hacks to populate undefined keys with default values.
-	checkedKeys := []string{"clone_wait", "additional_wait", "force_create", "define_connection_info", "preprovision"}
+	checkedKeys := []string{"clone_wait", "additional_wait", "force_create", "define_connection_info"}
 	for _, key := range checkedKeys {
 		if _, ok := d.GetOk(key); !ok {
 			d.Set(key, thisResource.Schema[key].Default)
